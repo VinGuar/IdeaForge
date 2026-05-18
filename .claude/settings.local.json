@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Remove-Item \"c:\\\\Users\\\\bosto\\\\idea maker\\\\ideaforge\\\\.env.local\" -Confirm:$false)",
+      "Bash(npm install *)",
+      "Bash(node --env-file=.env node_modules/.bin/tsx scripts/test-ideas.ts)",
+      "Bash(node --env-file=.env node_modules/.bin/tsx.cmd scripts/test-ideas.ts)",
+      "Bash(npx tsc *)"
+    ]
+  }
+}
