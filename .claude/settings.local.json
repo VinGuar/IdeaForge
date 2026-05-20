@@ -5,7 +5,25 @@
       "Bash(npm install *)",
       "Bash(node --env-file=.env node_modules/.bin/tsx scripts/test-ideas.ts)",
       "Bash(node --env-file=.env node_modules/.bin/tsx.cmd scripts/test-ideas.ts)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(node -e \"const ai = require\\('ai'\\); console.log\\(Object.keys\\(ai\\).filter\\(k => k.toLowerCase\\(\\).includes\\('stream'\\) || k.toLowerCase\\(\\).includes\\('object'\\)\\).join\\('\\\\n'\\)\\)\")",
+      "Bash(node -e \"const {streamObject} = require\\('ai'\\); const desc = Object.getOwnPropertyDescriptor\\(streamObject, 'name'\\); console.log\\(streamObject.toString\\(\\).slice\\(0,200\\)\\)\")",
+      "Bash(node -e \"const ai = require\\('ai'\\); console.log\\(ai.streamObject.length\\)\")",
+      "Bash(npm run *)",
+      "Bash(node -e \"require\\('dotenv'\\)\")",
+      "Bash(npx tsx *)",
+      "Bash(node --env-file=.env -e ' *)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\bosto\\\\idea maker\\\\ideaforge\\\\src\\\\components\\\\workspace\\\\\" -File | Select-Object Name | ConvertTo-Csv -NoTypeInformation)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\bosto\\\\idea maker\\\\ideaforge\\\\src\\\\lib\\\\\" -Recurse -Name)",
+      "Bash(Get-ChildItem -Path \".\\\\src\" -Recurse -Filter \"*.ts\" -o -Filter \"*.tsx\")",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(npx next *)",
+      "Bash(node -e \"const {streamObject} = require\\('ai'\\); console.log\\(typeof streamObject\\)\")",
+      "Bash(node -e \"const pkg = require\\('./node_modules/ai/package.json'\\); console.log\\(pkg.version\\)\")",
+      "Bash(node -e \"const {output} = require\\('ai'\\); console.log\\(typeof output, Object.keys\\(output || {}\\)\\)\")",
+      "Bash(node -e \"const ai = require\\('ai'\\); console.log\\(Object.keys\\(ai\\).filter\\(k => k.toLowerCase\\(\\).includes\\('output'\\)\\)\\)\")",
+      "Bash(node -e \"const sdk = require\\('@ai-sdk/react'\\); console.log\\(Object.keys\\(sdk\\)\\)\")",
+      "Bash(Remove-Item \"c:\\\\Users\\\\bosto\\\\idea maker\\\\ideaforge\\\\src\\\\lib\\\\workspace\\\\thread-storage.ts\")"
     ]
   }
 }

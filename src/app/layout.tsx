@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "IdeaForge — Validate startup ideas before you build",
+  title: "IdeaForge | Validate startup ideas before you build",
   description:
     "Demand-grounded startup validation: live complaints, market reality, wedge positioning, validation kits, and ship-ready prompts.",
 };

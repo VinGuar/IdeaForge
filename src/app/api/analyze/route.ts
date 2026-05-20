@@ -1,35 +1,11 @@
-import { generateText, streamObject } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { streamText, Output } from "ai";
 import { gatherDemandSnippets, snippetsToPromptDigest } from "@/lib/demand/gather";
+import { extractSearchQuery } from "@/lib/demand/extract-query";
 import { getLanguageModel } from "@/lib/ai/model";
 import { ANALYST_SYSTEM, buildAnalystPrompt } from "@/lib/ai/prompts";
 import { ideaReportSchema } from "@/lib/schemas/idea-report";
 
 export const maxDuration = 120;
-
-async function extractSearchQuery(topic: string): Promise<string> {
-  try {
-    const { text } = await generateText({
-      model: openai("gpt-4o-mini"),
-      system: "Extract 3-4 keywords to search Reddit, Hacker News, and GitHub for real user complaints about this problem. The search requires ALL keywords to appear in the same post, so fewer broader terms return more results — 3-4 is the limit. Pick specific nouns: industry, workflow, or technology terms someone frustrated with this problem would actually write in a forum post. Avoid generic words like build, create, tool, platform, software, make, want, need, solution. Output ONLY the keywords space-separated, no punctuation, no explanation.",
-      prompt: topic.slice(0, 600),
-      maxOutputTokens: 20,
-      temperature: 1,
-    });
-    const words = text.trim().replace(/[^a-z0-9\s]/gi, " ").split(/\s+/).filter(Boolean).slice(0, 4);
-    if (words.length > 0) return words.join(" ");
-  } catch {
-    // fall through to simple fallback
-  }
-  // Fallback: take first 3 meaningful words
-  return topic
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, " ")
-    .split(/\s+/)
-    .filter((w) => w.length > 3)
-    .slice(0, 3)
-    .join(" ");
-}
 
 export async function POST(req: Request) {
   try {
@@ -40,13 +16,13 @@ export async function POST(req: Request) {
       digest?: string;
     };
 
-    const topic = String(body.topic ?? "").trim();
+    const topic = String(body.topic ?? "").trim().slice(0, 2000);
     if (!topic) {
       return Response.json({ error: "Topic is required." }, { status: 400 });
     }
 
-    const founderProfile = body.founderProfile ? String(body.founderProfile) : "";
-    const pastedSignals = body.pastedSignals ? String(body.pastedSignals) : "";
+    const founderProfile = body.founderProfile ? String(body.founderProfile).slice(0, 2000) : "";
+    const pastedSignals = body.pastedSignals ? String(body.pastedSignals).slice(0, 12000) : "";
 
     // Use client-prefetched digest if provided, otherwise gather server-side as fallback.
     let digest: string;
@@ -79,12 +55,12 @@ export async function POST(req: Request) {
       );
     }
 
-    const result = streamObject({
+    const result = streamText({
       model,
-      schema: ideaReportSchema,
+      output: Output.object({ schema: ideaReportSchema }),
       system: ANALYST_SYSTEM,
       prompt: buildAnalystPrompt({ topic, founderProfile, digest, manualBlock, gatherErrorsBlock }),
-      temperature: 1,
+      temperature: 0.2,
     });
 
     return result.toTextStreamResponse();

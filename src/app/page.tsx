@@ -1,132 +1,153 @@
 import Link from "next/link";
-import type { ComponentType } from "react";
-import { ArrowRight, Sparkles, TrendingUp, ShieldCheck } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { ArrowRight, BarChart2, FileText, MessageSquare, Search } from "lucide-react";
 
 export default function Home() {
   return (
-    <main className="noise-overlay relative min-h-[100dvh] overflow-hidden px-6 py-10 md:px-10">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(94,106,255,0.28),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(144,92,255,0.2),transparent_28%)]" />
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-10">
-        <header className="glass-panel rounded-2xl border border-border/70 px-5 py-3">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-sm font-semibold tracking-tight">IdeaForge</p>
-              <p className="text-xs text-muted-foreground">
-                AI startup opportunity operating system
-              </p>
-            </div>
+    <div className="noise-overlay relative min-h-[100dvh] overflow-x-hidden bg-background text-foreground">
+
+      {/* Nav */}
+      <header className="relative flex h-16 items-center justify-between border-b border-border/70 bg-background px-6 md:px-12">
+        <p className="text-sm font-semibold tracking-tight">IdeaForge</p>
+        <Link
+          href="/workspace"
+          className="inline-flex h-9 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+        >
+          Open app
+          <ArrowRight className="size-4" />
+        </Link>
+      </header>
+
+      <div className="relative mx-auto max-w-4xl px-6 md:px-12">
+
+        {/* Hero */}
+        <section className="py-20 text-center md:py-28">
+          <h1 className="text-4xl font-semibold leading-tight tracking-tight md:text-[3.25rem]">
+            Find out if your idea is worth building.
+          </h1>
+          <p className="mx-auto mt-5 max-w-xl text-base text-muted-foreground md:text-lg">
+            Paste in your idea. IdeaForge scans Reddit, Hacker News, and GitHub for real complaints, then tells you whether people would actually pay for it.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               href="/workspace"
-              className="inline-flex h-8 items-center gap-2 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+              className="inline-flex h-11 items-center gap-2 rounded-lg bg-primary px-6 text-sm font-medium text-primary-foreground shadow-md transition-opacity hover:opacity-90"
             >
-              Open Workspace
+              Try it free
               <ArrowRight className="size-4" />
             </Link>
-          </div>
-        </header>
-
-        <section className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="space-y-6">
-            <Badge className="bg-primary/20 text-primary">Founder-grade AI</Badge>
-            <h1 className="max-w-2xl text-4xl font-semibold leading-tight tracking-tight md:text-6xl">
-              Find startup ideas people are already begging for.
-            </h1>
-            <p className="max-w-2xl text-base text-muted-foreground md:text-lg">
-              Mine real complaints, validate demand, analyze competitors, and
-              generate launch-ready MVP plans with AI.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href="/workspace"
-                className="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/30 transition hover:opacity-90"
-              >
-                Launch IdeaForge
-                <ArrowRight className="size-4" />
-              </Link>
-              <Link
-                href="/workspace"
-                className="inline-flex h-10 items-center rounded-lg border border-border bg-background/70 px-4 text-sm font-medium transition hover:bg-muted/40"
-              >
-                View live workspace
-              </Link>
-            </div>
-          </div>
-
-          <div className="glass-panel rounded-2xl border border-border/70 p-5 shadow-xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary/90">
-              Example opportunity
-            </p>
-            <h3 className="mt-3 text-lg font-semibold">
-              Agencies keep complaining Shopify analytics are too slow.
-            </h3>
-            <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
-              <Metric label="Opportunity score" value="82/100" tone="text-emerald-300" />
-              <Metric label="Competition intensity" value="64/100" tone="text-amber-300" />
-              <Metric label="Wedge confidence" value="High" tone="text-sky-300" />
-              <Metric label="Time to MVP" value="12 days" tone="text-violet-300" />
-            </div>
-            <div className="mt-5 space-y-2 text-sm text-muted-foreground">
-              <p>- Competitors optimize for enterprise dashboards, not agency speed.</p>
-              <p>- Users still export CSV + spreadsheets daily.</p>
-              <p>- Strong willingness-to-pay from agencies managing 10+ stores.</p>
-            </div>
+            <Link
+              href="/workspace"
+              className="inline-flex h-11 items-center rounded-lg border border-border/70 bg-card px-6 text-sm font-medium transition-colors hover:bg-muted/40"
+            >
+              See a sample report
+            </Link>
           </div>
         </section>
 
-        <section className="grid gap-4 md:grid-cols-3">
-          <Feature
-            icon={TrendingUp}
-            title="Real demand mining"
-            text="Cluster live complaints into opportunities with confidence scoring."
-          />
-          <Feature
-            icon={ShieldCheck}
-            title="Brutal validation gates"
-            text="Get explicit don't-build warnings before wasting build cycles."
-          />
-          <Feature
-            icon={Sparkles}
-            title="Execution artifacts"
-            text="Generate Lovable, v0, Cursor prompts, roadmap, and GTM scripts."
-          />
+        {/* Steps */}
+        <section className="pb-20">
+          <h2 className="mb-10 text-center text-xl font-semibold tracking-tight">How it works</h2>
+          <div className="space-y-4">
+            <StepRow
+              number="1"
+              title="Describe your idea"
+              text="Write your idea in plain English. Just describe the problem you want to solve and who has it."
+            />
+            <StepRow
+              number="2"
+              title="We find real evidence"
+              text="IdeaForge searches Reddit, Hacker News, GitHub, and Stack Overflow for real people complaining about that exact problem. No made-up data."
+            />
+            <StepRow
+              number="3"
+              title="Get a clear verdict"
+              text='You receive a scored report that tells you whether to build, what the biggest risks are, and what to do first if you move forward.'
+            />
+          </div>
         </section>
+
+        {/* What you get */}
+        <section className="pb-20">
+          <h2 className="mb-3 text-center text-xl font-semibold tracking-tight">What's in your report</h2>
+          <p className="mb-10 text-center text-sm text-muted-foreground">
+            Everything you need to make a confident decision.
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <ReportCard
+              icon={BarChart2}
+              title="Build gate score"
+              text="A 0–100 score based on real demand signals. High score means there's evidence people want this. Low score means stop and rethink."
+            />
+            <ReportCard
+              icon={Search}
+              title="Real complaints, sourced"
+              text="Actual posts and quotes from people experiencing the problem. Not summaries, real excerpts with sources you can click."
+            />
+            <ReportCard
+              icon={FileText}
+              title="Competitor gaps"
+              text="A breakdown of who already exists in the space, what they're getting wrong, and where there's room for you."
+            />
+            <ReportCard
+              icon={MessageSquare}
+              title="Validation kit + build plan"
+              text="Ready-to-send Reddit posts, landing page copy, and interview questions to validate further. Plus AI prompts to start building."
+            />
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="mb-20 rounded-2xl border border-border/70 bg-card px-8 py-12 text-center">
+          <h2 className="text-xl font-semibold tracking-tight">Ready to stop guessing?</h2>
+          <p className="mx-auto mt-3 max-w-sm text-sm text-muted-foreground">
+            Most founders build things nobody asked for. IdeaForge shows you the evidence before you commit.
+          </p>
+          <Link
+            href="/workspace"
+            className="mt-6 inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            Validate your idea
+            <ArrowRight className="size-4" />
+          </Link>
+        </section>
+
       </div>
-    </main>
-  );
-}
 
-function Metric({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: string;
-  tone: string;
-}) {
-  return (
-    <div className="rounded-xl border border-border/70 bg-background/55 p-3">
-      <p className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</p>
-      <p className={`mt-1 text-base font-semibold ${tone}`}>{value}</p>
+      <footer className="border-t border-border/70 px-6 py-5 text-center text-xs text-muted-foreground">
+        IdeaForge. Validate demand before you ship.
+      </footer>
     </div>
   );
 }
 
-function Feature({
+function StepRow({ number, title, text }: { number: string; title: string; text: string }) {
+  return (
+    <div className="flex gap-5 rounded-xl border border-border/70 bg-card px-5 py-4">
+      <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
+        {number}
+      </div>
+      <div>
+        <p className="text-sm font-semibold">{title}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{text}</p>
+      </div>
+    </div>
+  );
+}
+
+function ReportCard({
   icon: Icon,
   title,
   text,
 }: {
-  icon: ComponentType<{ className?: string }>;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   text: string;
 }) {
   return (
-    <div className="glass-panel rounded-2xl border border-border/70 p-4">
-      <Icon className="size-4 text-primary" />
-      <p className="mt-2 text-sm font-semibold">{title}</p>
-      <p className="mt-1 text-sm text-muted-foreground">{text}</p>
+    <div className="rounded-xl border border-border/70 bg-card p-5">
+      <Icon className="size-4 text-primary/70" />
+      <p className="mt-3 text-sm font-semibold">{title}</p>
+      <p className="mt-1.5 text-sm text-muted-foreground">{text}</p>
     </div>
   );
 }

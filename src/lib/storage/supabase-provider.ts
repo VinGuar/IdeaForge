@@ -51,8 +51,10 @@ export function createSupabaseProvider(
         { onConflict: "id" },
       );
       if (threadError) {
-        console.error("[storage] upsertThread threads:", threadError.message);
-        return;
+        // Log but do NOT return — the thread may already exist in Supabase from
+        // a previous call that timed out on the client side. Always attempt to
+        // save the report even if this upsert reports an error.
+        console.error("[storage] thread upsert error (continuing):", threadError.message, threadError.code);
       }
 
       if (thread.report) {
@@ -68,7 +70,7 @@ export function createSupabaseProvider(
             { onConflict: "thread_id" },
           );
         if (reportError) {
-          console.error("[storage] upsertThread report:", reportError.message);
+          console.error("[storage] report upsert error:", reportError.message, reportError.code, "| thread:", thread.id);
         }
       }
     },
@@ -85,43 +87,41 @@ export function createSupabaseProvider(
     async loadMessages(threadId) {
       const { data, error } = await supabase
         .from("thread_messages")
-        .select("id, role, content, created_at")
+        .select("messages")
         .eq("thread_id", threadId)
         .eq("user_id", userId)
-        .order("created_at", { ascending: true })
-        .limit(MESSAGE_CAP);
+        .maybeSingle();
 
       if (error || !data) return [];
 
-      return data.map((row) => ({
-        id: row.id as string,
-        role: row.role as "user" | "assistant",
-        content: row.content as string,
-        createdAt: new Date(row.created_at as string).getTime(),
+      type MsgRow = { id: string; role: string; content: string; created_at: string };
+      const rows = (data.messages ?? []) as MsgRow[];
+      return rows.map((m) => ({
+        id: m.id,
+        role: m.role as "user" | "assistant",
+        content: m.content,
+        createdAt: new Date(m.created_at).getTime(),
       }));
     },
 
     async saveMessages(threadId, messages) {
-      // Delete existing messages for the thread, then insert the capped list.
-      await supabase
-        .from("thread_messages")
-        .delete()
-        .eq("thread_id", threadId)
-        .eq("user_id", userId);
-
       const trimmed = messages.slice(-MESSAGE_CAP);
-      if (trimmed.length === 0) return;
-
-      const { error } = await supabase.from("thread_messages").insert(
-        trimmed.map((m) => ({
-          id: m.id,
-          thread_id: threadId,
-          user_id: userId,
-          role: m.role,
-          content: m.content,
-          created_at: new Date(m.createdAt).toISOString(),
-        })),
-      );
+      // Upsert a single row — one row per thread, whole conversation in jsonb.
+      const { error } = await supabase
+        .from("thread_messages")
+        .upsert(
+          {
+            thread_id: threadId,
+            user_id: userId,
+            messages: trimmed.map((m) => ({
+              id: m.id,          // stored in json, not a DB uuid column — fine
+              role: m.role,
+              content: m.content,
+              created_at: new Date(m.createdAt).toISOString(),
+            })),
+          },
+          { onConflict: "thread_id" },
+        );
       if (error) console.error("[storage] saveMessages:", error.message);
     },
   };
